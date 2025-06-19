@@ -2,61 +2,36 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TaskNest</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="icon.png">
+  <title>TaskNest অর্ডার</title>
 </head>
 <body>
+  <h2>TaskNest অর্ডার ফর্ম</h2>
+  <form id="orderForm">
+    <input type="text" name="name" placeholder="আপনার নাম" required><br>
+    <input type="email" name="email" placeholder="আপনার ইমেইল" required><br>
+    <textarea name="message" placeholder="আপনার কাজের বিবরণ..." required></textarea><br>
+    <button type="submit">পাঠান</button>
+    <p id="response"></p>
+  </form>
 
-  <div class="container">
-    <header>
-      <h1>TaskNest</h1>
-      <p>আপনার নির্ভরযোগ্য ফ্রিল্যান্স পার্টনার</p>
-    </header>
-
-    <section class="card services">
-      <h2>সার্ভিসসমূহ</h2>
-      <ul>
-        <li>🌐 ওয়েবসাইট ডিজাইন ও ডেভেলপমেন্ট</li>
-        <li>✍️ কনটেন্ট রাইটিং ও ব্লগ ম্যানেজমেন্ট</li>
-        <li>📈 এসইও এবং ডিজিটাল মার্কেটিং</li>
-      </ul>
-    </section>
-
-    <section class="card form-section">
-      <h2>অর্ডার দিন</h2>
-      <form id="orderForm">
-        <input type="text" name="from_name" placeholder="আপনার নাম" required>
-        <input type="email" name="reply_to" placeholder="আপনার ইমেইল" required>
-        <textarea name="message" placeholder="আপনার কাজের বিবরণ লিখুন..." rows="5" required></textarea>
-        <button type="submit">অর্ডার পাঠান</button>
-      </form>
-      <p id="msg"></p>
-    </section>
-
-    <footer>
-      © 2025 TaskNest | Crafted with ❤️
-    </footer>
-  </div>
-
-  <!-- EmailJS CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
   <script>
-    (function() {
-      emailjs.init("1sQSihIHz6xW6x2gz"); // আপনার Public Key
-    })();
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwkB4NDz5s-d6gkEOL6HkWdrdPdIo4GQWqbuTPPOuxnMEPfoDGSXXC4giEIZTylIR1D0w/exec";
+    const form = document.getElementById('orderForm');
+    const response = document.getElementById('response');
 
-    document.getElementById("orderForm").addEventListener("submit", function(e) {
+    form.addEventListener('submit', e => {
       e.preventDefault();
+      response.textContent = "⏳ পাঠানো হচ্ছে...";
+      const formData = new FormData(form);
 
-      emailjs.sendForm('service_tasknest', 'template_31vvhca', this)
+      fetch(scriptURL, { method: 'POST', body: formData })
         .then(() => {
-          document.getElementById("msg").innerText = "✅ অর্ডার সফলভাবে পাঠানো হয়েছে!";
-          this.reset();
-        }, (error) => {
-          document.getElementById("msg").innerText = "❌ কিছু ভুল হয়েছে। দয়া করে আবার চেষ্টা করুন।";
-          console.error(error);
+          response.textContent = "✅ সফলভাবে পাঠানো হয়েছে!";
+          form.reset();
+        })
+        .catch(error => {
+          console.error('Error!', error.message);
+          response.textContent = "❌ সমস্যা হয়েছে।";
         });
     });
   </script>
